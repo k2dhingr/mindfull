@@ -1,0 +1,102 @@
+
+═══════════════════════════════════════════════════════════════════
+                    MINDFULL AI INTEGRATION GUIDE
+═══════════════════════════════════════════════════════════════════
+
+FILES IN THIS PACKAGE:
+─────────────────────
+1. LlamaHealthCoach_quantized.pth (~1.3GB) - Main AI model (int8 quantized)
+2. HealthAnalytics.pth (~2MB) - Anomaly detection LSTM
+3. tokenizer_files/ - Tokenizer for text processing
+4. health_coach_prompt.txt - Main AI system prompt
+5. food_nutrition_prompt.txt - Nutrition analysis prompt
+6. anomaly_prompt.txt - Health monitoring prompt
+7. health_scaler.pkl - Data normalization scaler
+8. This guide
+
+XCODE INTEGRATION - STEP BY STEP:
+─────────────────────────────────
+
+STEP 1: Add Files to Xcode Project
+   • Open MindFull.xcodeproj
+   • Drag ALL .pth files into project navigator
+   • Drag tokenizer_files folder
+   • Drag .txt and .pkl files
+   • Check "Copy items if needed"
+   • Add to MindFull target
+
+STEP 2: Install PyTorch for iOS
+   In your Podfile, add:
+   ```
+   pod 'LibTorch-Lite', '~> 2.4.0'
+   ```
+
+   Or use Swift Package Manager:
+   https://github.com/pytorch/ios-demo-app
+
+STEP 3: Update Info.plist
+   Add privacy descriptions:
+
+   <key>NSCameraUsageDescription</key>
+   <string>To scan food for accurate nutrition analysis</string>
+
+   <key>NSPhotoLibraryUsageDescription</key>
+   <string>To analyze food photos from your library</string>
+
+   <key>NSHealthShareUsageDescription</key>
+   <string>To provide personalized health insights and coaching</string>
+
+   <key>NSHealthUpdateUsageDescription</key>
+   <string>To log nutrition and mindfulness activities</string>
+
+STEP 4: Expand HealthKit Permissions
+   In HealthDataManager.swift, update typesToRead:
+
+   ```swift
+   let typesToRead: Set<HKObjectType> = [
+       // Current
+       HKQuantityType(.stepCount),
+       HKQuantityType(.heartRate),
+       HKCategoryType(.sleepAnalysis),
+
+       // ADD THESE:
+       HKQuantityType(.heartRateVariabilitySDNN),  // HRV - critical!
+       HKQuantityType(.restingHeartRate),
+       HKQuantityType(.activeEnergyBurned),
+       HKQuantityType(.appleExerciseTime),
+       HKQuantityType(.respiratoryRate),
+       HKQuantityType(.oxygenSaturation),
+       HKQuantityType(.bodyTemperature),
+       HKQuantityType(.appleStandTime),
+       HKCategoryType(.mindfulSession),
+       HKWorkoutType.workoutType()
+   ]
+   ```
+
+ARCHITECTURE:
+────────────
+
+Your app will have:
+✓ LlamaHealthCoach - Main conversational AI
+✓ HealthAnalytics - Background anomaly detection
+✓ Vision API - Food recognition (built into iOS)
+✓ HealthKit - All health data collection
+✓ Local storage - Chat history & user data
+
+NEXT STEPS:
+──────────
+
+Tell me: "Ready for Swift integration code"
+
+I will provide you with complete Swift files:
+1. LlamaManager.swift - AI model interface
+2. HealthAnalyticsManager.swift - Anomaly detection
+3. UnifiedHealthContext.swift - Data aggregation
+4. FoodRecognitionService.swift - Vision + Llama
+5. ChatHistoryManager.swift - Conversation persistence
+6. Updated ChatView.swift - Real AI chat
+7. Updated HealthDataManager.swift - All HealthKit metrics
+8. OnboardingView.swift - First-time setup
+9. Updated ContentView.swift - Navigation fixes
+
+═══════════════════════════════════════════════════════════════════
